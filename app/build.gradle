@@ -46,10 +46,10 @@ distTar {
 }
 
 application {
-    mainClass = 'ch.so.agi.oereb.App'
+    mainClass = 'ch.so.agi.oereb.pdf4oereb.App'
 }
 
 run {
-    args = ["--xml", "src/test/data/so/CH993287900649-other-legend.xml", "--out", "/Users/stefan/tmp/pdf4oereb", "--lang", "de"]          
+    args = ["--xml", "src/test/data/ne/20220125_70_2364_geom_images.xml", "--out", "/Users/stefan/tmp/pdf4oereb", "--lang", "de"]          
 }
 

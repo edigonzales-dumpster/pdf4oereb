@@ -1,4 +1,4 @@
-package ch.so.agi.oereb;
+package ch.so.agi.oereb.pdf4oereb;
 
 public enum Locale {
 	DE,

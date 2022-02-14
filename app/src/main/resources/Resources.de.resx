@@ -4,14 +4,14 @@
         <value>Seite</value>
     </data>
 
-    <data name="MainPage.TitleReduced" xml:space="preserve">
-        <value>Auszug aus dem Kataster der&#x000A;öffentlich-rechtlichen Eigentumsbeschränkungen&#x000A;(ÖREB-Kataster) mit reduzierter Information</value>
-    </data>
     <data name="MainPage.Title" xml:space="preserve">
-        <value>Auszug aus dem Kataster der&#x000A;öffentlich-rechtlichen Eigentumsbeschränkungen&#x000A;(ÖREB-Kataster)</value>
+        <value>Auszug aus dem Kataster der öffentlich-&#x000A;rechtlichen Eigentumsbeschränkungen&#x000A;(ÖREB-Kataster)</value>
     </data>
     <data name="MainPage.RealEstate_DPR.Number" xml:space="preserve">
         <value>Grundstück-Nr.</value>
+    </data>
+    <data name="MainPage.RealEstate_DPR.Type" xml:space="preserve">
+        <value>Grundstückart</value>
     </data>
     <data name="MainPage.Municipality_FosNr" xml:space="preserve">
         <value>Gemeinde (BFS-Nr.)</value>

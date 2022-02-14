@@ -1,4 +1,4 @@
-package ch.so.agi.oereb;
+package ch.so.agi.oereb.pdf4oereb;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
