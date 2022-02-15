@@ -21,6 +21,9 @@
     </data>
     <data name="MainPage.LandRegistryArea" xml:space="preserve">
         <value>Fläche</value>
+    </data>    
+    <data name="MainPage.UpdateDateCS" xml:space="preserve">
+        <value>Stand der amtlichen Vermessung</value>
     </data>
     <data name="MainPage.ExtractIdentifier" xml:space="preserve">
         <value>Auszugsnummer</value>
@@ -52,9 +55,6 @@
     </data>
     <data name="ContentPage.GeneralInformation" xml:space="preserve">
         <value>Allgemeine Informationen</value>
-    </data>
-    <data name="ContentPage.BaseData" xml:space="preserve">
-        <value>Grundlagedaten</value>
     </data>
     <data name="ContentPage.QRCode" xml:space="preserve">
         <value>Um einen aktualisierten Auszug aus dem ÖREB-Kataster zu erhalten, scannen Sie bitte den QR-Code.</value>
@@ -92,7 +92,7 @@
     </data>
 
     <data name="GlossaryPage.Title" xml:space="preserve">
-        <value>Abkürzungen</value>
+        <value>Begriffe und Abkürzungen</value>
     </data>
 
 
