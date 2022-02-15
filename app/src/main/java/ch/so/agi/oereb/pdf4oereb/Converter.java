@@ -22,6 +22,7 @@ import org.apache.fop.apps.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.so.agi.oereb.pdf4oereb.saxon.ext.URLDecoder;
 //import ch.so.agi.oereb.saxon.ext.FixImage;
 //import ch.so.agi.oereb.saxon.ext.OverlayImage;
 //import ch.so.agi.oereb.saxon.ext.PlanForLandRegisterMainPageImage;
@@ -157,7 +158,7 @@ public class Converter {
 ////        	proc.registerExtensionFunction(new PlanForLandRegisterMainPageImage());
 ////        	proc.registerExtensionFunction(new RestrictionOnLandownershipImage());
 ////        	proc.registerExtensionFunction(new FixImage());
-////        	proc.registerExtensionFunction(new URLDecoder());
+        	proc.registerExtensionFunction(new URLDecoder());
 //
         	XsltCompiler comp = proc.newXsltCompiler();
         	XsltExecutable exp = comp.compile(new StreamSource(new File(xsltFileName)));

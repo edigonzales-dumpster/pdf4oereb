@@ -177,12 +177,10 @@
                       <fo:inline>
                         <fo:basic-link text-decoration="none" color="rgb(76,143,186)">
                           <xsl:attribute name="external-destination">
-                            <!--<xsl:value-of select="oereb:decodeURL(data:PLRCadastreAuthority/data:OfficeAtWeb)"/>-->
-                            <xsl:value-of select="data:PLRCadastreAuthority/data:OfficeAtWeb/data:LocalisedText[1]/data:Text"/>
+                            <xsl:value-of select="oereb:decodeURL(data:PLRCadastreAuthority/data:OfficeAtWeb/data:LocalisedText[1]/data:Text)"/>
                           </xsl:attribute>
-                          <!--<xsl:value-of select="substring(oereb:decodeURL(data:PLRCadastreAuthority/data:OfficeAtWeb), 9)"/>-->
                           <!--<xsl:value-of select="data:PLRCadastreAuthority/data:OfficeAtWeb/data:LocalisedText[data:Language = 'fr']/data:Text"/>-->
-                            <xsl:value-of select="data:PLRCadastreAuthority/data:OfficeAtWeb/data:LocalisedText[1]/data:Text"/>
+                            <xsl:value-of select="oereb:decodeURL(data:PLRCadastreAuthority/data:OfficeAtWeb/data:LocalisedText[1]/data:Text)"/>
                         </fo:basic-link>
                       </fo:inline>
                     </fo:block>

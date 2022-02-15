@@ -616,6 +616,7 @@
       <data:MetadataOfGeographicalBaseData>20060714</data:MetadataOfGeographicalBaseData>
       <data:LandRegistryArea>2482</data:LandRegistryArea>
       <data:Limit>
+        <geometry:multisurface>
         <geometry:surface>
           <geometry:exterior>
             <geometry:polyline>
@@ -662,6 +663,7 @@
             </geometry:polyline>
           </geometry:exterior>
         </geometry:surface>
+        </geometry:multisurface>
       </data:Limit>
       <data:RestrictionOnLandownership>
         <data:LegendText>
