@@ -119,7 +119,7 @@ public class OverlayImage implements ExtensionFunction {
         byte[] mapImageByteArray = getImageFromXdmNode(node);
         InputStream mapImageInputStream = new ByteArrayInputStream(mapImageByteArray);
         BufferedImage mapBufferedImage = ImageIO.read(mapImageInputStream);
-        ImageIO.write(mapBufferedImage, "png", new File("/Users/stefan/tmp/map_image.png"));
+        //ImageIO.write(mapBufferedImage, "png", new File("/Users/stefan/tmp/map_image.png"));
         
         // Width and height are used several times.
         int imageWidthPx = mapBufferedImage.getWidth();
@@ -129,7 +129,7 @@ public class OverlayImage implements ExtensionFunction {
         // (scalebar, north arrow and the highlighted parcel).
         Rectangle imageBounds = new Rectangle(imageWidthPx, imageHeightPx);
         BufferedImage overlayImage = new BufferedImage(imageBounds.width, imageBounds.height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
-        ImageIO.write(overlayImage, "png", new File("/Users/stefan/tmp/empty_overlay_image.png"));
+        //ImageIO.write(overlayImage, "png", new File("/Users/stefan/tmp/empty_overlay_image.png"));
         
         Graphics2D gr = overlayImage.createGraphics();
         int type = AlphaComposite.SRC;
@@ -165,12 +165,12 @@ public class OverlayImage implements ExtensionFunction {
         if (!geometry.isEmpty()) {
             // Calculate the transformation between provided pixel image and real world coordinate system (parcel geometry).
             Envelope pixelEnvelope = new Envelope(new Coordinate(0, 0), new Coordinate(imageWidthPx, imageHeightPx));
-            //System.err.println("**** pixelEnvelope: " + pixelEnvelope.toString());
-            //System.err.println("**** worldEnvelope: " + worldEnvelope.toString());
             AffinePointTransformation transformation =  new AffinePointTransformation(pixelEnvelope, worldEnvelope);
 
+            double actualDpi = (double) ((mapBufferedImage.getWidth() / mapWidthMM) * 25.4);     
+            
             gr.setColor(highlightingStrokeColorRgb);
-            gr.setStroke(new BasicStroke((float) highlightingStrokeWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
+            gr.setStroke(new BasicStroke((float) (highlightingStrokeWidth/(referenceDpi/actualDpi)), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL));
 
             // ShapeWriter cannot handle multipolygons (?).
             // But respects holes.
@@ -231,7 +231,7 @@ public class OverlayImage implements ExtensionFunction {
         byte[] highlightingImageByteArray = baos.toByteArray();
         baos.close();          
 
-        //ImageIO.write(hightlightingImage, "png", new File("/Users/stefan/tmp/overlay_image.png"));        
+        ImageIO.write(overlayImage, "png", new File("/Users/stefan/tmp/overlay_image.png"));        
         return highlightingImageByteArray;
     }
     

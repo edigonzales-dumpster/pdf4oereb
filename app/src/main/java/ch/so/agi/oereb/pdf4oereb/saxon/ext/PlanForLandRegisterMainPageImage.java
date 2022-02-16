@@ -136,7 +136,7 @@ public class PlanForLandRegisterMainPageImage implements ExtensionFunction {
             g.drawImage(baseImageBufferedImage, 0, 0, null);
             g.drawImage(overlayImageBufferedImage, 0, 0, null);
                                 
-            ImageIO.write(combinedImage, "png", new File("/Users/stefan/tmp/combined_image.png"));
+            //ImageIO.write(combinedImage, "png", new File("/Users/stefan/tmp/combined_image.png"));
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(combinedImage, imageFormat, baos); 

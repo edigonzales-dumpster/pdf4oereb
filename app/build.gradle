@@ -9,11 +9,11 @@ repositories {
     mavenCentral()
 }
 
-// The package javax.xml.transform.stream is accessible from more than one module: <unnamed>, java.xml
 configurations {
     jar.archiveName = "pdf4oereb-"+version+".jar"
 }
 
+// The package javax.xml.transform.stream is accessible from more than one module: <unnamed>, java.xml
 configurations {
     all*.exclude group: 'xml-apis'
 }
