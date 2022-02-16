@@ -22,6 +22,9 @@ import org.apache.fop.apps.MimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.so.agi.oereb.pdf4oereb.saxon.ext.FixImage;
+import ch.so.agi.oereb.pdf4oereb.saxon.ext.OverlayImage;
+import ch.so.agi.oereb.pdf4oereb.saxon.ext.PlanForLandRegisterMainPageImage;
 import ch.so.agi.oereb.pdf4oereb.saxon.ext.URLDecoder;
 //import ch.so.agi.oereb.saxon.ext.FixImage;
 //import ch.so.agi.oereb.saxon.ext.OverlayImage;
@@ -79,11 +82,11 @@ public class Converter {
         	log.info("start saxon: " + new Date().toString());
         	Processor proc = new Processor(false);
 
-//        	proc.registerExtensionFunction(new OverlayImage());
-//        	proc.registerExtensionFunction(new PlanForLandRegisterMainPageImage());
+        	proc.registerExtensionFunction(new OverlayImage());
+        	proc.registerExtensionFunction(new PlanForLandRegisterMainPageImage());
 //        	proc.registerExtensionFunction(new RestrictionOnLandownershipImage());
-//        	proc.registerExtensionFunction(new FixImage());
-//        	proc.registerExtensionFunction(new URLDecoder());
+        	proc.registerExtensionFunction(new FixImage());
+        	proc.registerExtensionFunction(new URLDecoder());
 
         	XsltCompiler comp = proc.newXsltCompiler();
         	XsltExecutable exp = comp.compile(new StreamSource(new File(xsltFileName)));
@@ -154,10 +157,10 @@ public class Converter {
         	// the saxon part
         	Processor proc = new Processor(false);
 
-////        	proc.registerExtensionFunction(new OverlayImage());
-////        	proc.registerExtensionFunction(new PlanForLandRegisterMainPageImage());
+        	proc.registerExtensionFunction(new OverlayImage());
+        	proc.registerExtensionFunction(new PlanForLandRegisterMainPageImage());
 ////        	proc.registerExtensionFunction(new RestrictionOnLandownershipImage());
-////        	proc.registerExtensionFunction(new FixImage());
+        	proc.registerExtensionFunction(new FixImage());
         	proc.registerExtensionFunction(new URLDecoder());
 //
         	XsltCompiler comp = proc.newXsltCompiler();

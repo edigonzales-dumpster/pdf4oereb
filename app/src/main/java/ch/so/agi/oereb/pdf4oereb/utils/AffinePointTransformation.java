@@ -1,4 +1,4 @@
-package ch.so.agi.oereb.pdf4oereb.jts.util;
+package ch.so.agi.oereb.pdf4oereb.utils;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;

@@ -26,7 +26,7 @@ public class URLDecoder implements ExtensionFunction {
         XdmNode urlNode = (XdmNode) arguments[0];
         
         try {
-            String decodedUrl = java.net.URLDecoder.decode(urlNode.getStringValue().trim(), "UTF-8"); // trim fixes some illegal character execption
+            String decodedUrl = java.net.URLDecoder.decode(urlNode.getStringValue().trim(), "UTF-8"); // trim fixes some illegal character exception
             
             // Some strange (?) corner case:
             if (decodedUrl.contains(" ")) {
@@ -55,5 +55,4 @@ public class URLDecoder implements ExtensionFunction {
     public QName getName() {
         return new QName("http://oereb.geo.so.ch", "decodeURL");
     }
-
 }

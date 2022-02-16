@@ -3,6 +3,9 @@
   <xsl:output method="xml" indent="yes"/>
   <xsl:param name="localeUrl" select="'Resources.de.resx'"/>
   <xsl:variable name="localeXml" select="document($localeUrl)/*"/>
+  <xsl:variable name="OverlayImage">
+    <xsl:value-of select="oereb:createOverlayImage(extract:GetExtractByIdResponse/data:Extract/data:RealEstate/data:Limit, extract:GetExtractByIdResponse/data:Extract/data:RealEstate/data:PlanForLandRegisterMainPage)"/>
+  </xsl:variable>
   <xsl:decimal-format name="swiss" decimal-separator="." grouping-separator="'"/>
   <xsl:template match="extract:GetExtractByIdResponse/data:Extract">
     <fo:root language="de" font-family="Cadastra" font-weight="400" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" xmlns:xsd="https://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en">
@@ -28,8 +31,7 @@
                   <xsl:attribute name="src">
                     <xsl:text>url('data:</xsl:text>
                     <xsl:text>image/png;base64,</xsl:text>
-                    <!--<xsl:value-of select="oereb:createPlanForLandRegisterMainPageImage(data:RealEstate/data:PlanForLandRegisterMainPage, $OverlayImage)"/>-->
-                    <xsl:value-of select="data:RealEstate/data:PlanForLandRegisterMainPage/data:Image[1]/data:Image"/>
+                    <xsl:value-of select="oereb:createPlanForLandRegisterMainPageImage(data:RealEstate/data:PlanForLandRegisterMainPage, $OverlayImage)"/>
                     <xsl:text>')</xsl:text>
                   </xsl:attribute>
                 </xsl:if>
@@ -389,8 +391,7 @@
                 <xsl:attribute name="src">
                   <xsl:text>url('data:</xsl:text>
                   <xsl:text>image/png;base64,</xsl:text>
-                  <!--<xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:FederalLogo)"/>-->
-                  <xsl:value-of select="/extract:GetExtractByIdResponse/data:Extract/data:FederalLogo"/>
+                  <xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:FederalLogo)"/>
                   <xsl:text>')</xsl:text>
                 </xsl:attribute>
               </xsl:if>
@@ -414,8 +415,7 @@
                 <xsl:attribute name="src">
                   <xsl:text>url('data:</xsl:text>
                   <xsl:text>image/png;base64,</xsl:text>
-                  <!--<xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:CantonalLogo)"/>-->
-                  <xsl:value-of select="/extract:GetExtractByIdResponse/data:Extract/data:CantonalLogo"/>
+                  <xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:CantonalLogo)"/>
                   <xsl:text>')</xsl:text>
                 </xsl:attribute>
               </xsl:if>
@@ -439,8 +439,7 @@
                 <xsl:attribute name="src">
                   <xsl:text>url('data:</xsl:text>
                   <xsl:text>image/png;base64,</xsl:text>
-                  <!--<xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:MunicipalityLogo)"/>-->
-                  <xsl:value-of select="/extract:GetExtractByIdResponse/data:Extract/data:MunicipalityLogo"/>
+                  <xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:MunicipalityLogo)"/>
                   <xsl:text>')</xsl:text>
                 </xsl:attribute>
               </xsl:if>
@@ -465,7 +464,7 @@
                   <xsl:text>url('data:</xsl:text>
                   <xsl:text>image/png;base64,</xsl:text>
                   <!--<xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:LogoPLRCadastre)"/>-->
-                  <xsl:value-of select="/extract:GetExtractByIdResponse/data:Extract/data:LogoPLRCadastre"/>
+                  <xsl:value-of select="oereb:fixImage(/extract:GetExtractByIdResponse/data:Extract/data:LogoPLRCadastre)"/>
                   <xsl:text>')</xsl:text>
                 </xsl:attribute>
               </xsl:if>
