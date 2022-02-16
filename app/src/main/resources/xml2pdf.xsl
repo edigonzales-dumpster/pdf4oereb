@@ -388,7 +388,6 @@
         <xsl:call-template name="insertHeaderAndFooter"/>
         <fo:flow flow-name="xsl-region-body">
           <fo:block>
-            <!-- Rechtsgültige Eigentumsbeschränkungen (inKraft) müssen vor laufenden Änderungen erscheinen. -->
             <xsl:for-each-group select="data:RestrictionOnLandownership" group-by="data:Theme/data:Code">
             <!--
               <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
