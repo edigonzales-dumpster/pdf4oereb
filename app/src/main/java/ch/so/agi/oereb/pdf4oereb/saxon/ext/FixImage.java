@@ -33,7 +33,7 @@ public class FixImage implements ExtensionFunction {
 
     @Override
     public QName getName() {
-        return new QName("http://oereb.geo.so.ch", "fixImage");
+        return new QName("http://oereb.so.ch", "fixImage");
     }
 
     @Override

@@ -372,7 +372,7 @@
               <xsl:attribute name="src">
                 <xsl:text>url('data:</xsl:text>
                 <xsl:text>image/png;base64,</xsl:text>
-                <xsl:value-of select="oereb:createRestrictionOnLandownershipImages(data:Map, ../data:PlanForLandRegister, $OverlayImage)"/>
+                <xsl:value-of select="oereb:createRestrictionOnLandownershipImages(data:Map/data:Image[1]/data:Image, ../data:PlanForLandRegister/data:Image[1]/data:Image, $OverlayImage)"/>
                 <xsl:text>')</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>

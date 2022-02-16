@@ -53,6 +53,6 @@ public class URLDecoder implements ExtensionFunction {
 
     @Override
     public QName getName() {
-        return new QName("http://oereb.geo.so.ch", "decodeURL");
+        return new QName("http://oereb.so.ch", "decodeURL");
     }
 }

@@ -39,7 +39,8 @@ public class OverlayImageTest {
         XdmAtomicValue resultImage = (XdmAtomicValue) overlayImage.call(arguments);
         
         String base64String = resultImage.getUnderlyingValue().getStringValue();
-        log.info(base64String);
+        //log.info(base64String);
+        
         // Comparing the exact base64 string does not work in different java environments? (e.g. travis/gitlab)
         //String expectedResult = new String(Files.readAllBytes(new File("src/test/resources/OverlayImageTest/createOverlayImage_Gml1_Ok_expectedResult.txt").toPath()));
     	//assertEquals(expectedResult, resultImage.getStringValue(), "Overlay image is not equal.");        

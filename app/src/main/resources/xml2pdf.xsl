@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet  version="3.0" exclude-result-prefixes="geometry extract data" xmlns:oereb="http://oereb.geo.so.ch" xmlns:geometry="http://www.interlis.ch/geometry/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" xmlns:extract="http://schemas.geo.admin.ch/V_D/OeREB/2.0/Extract" xmlns:data="http://schemas.geo.admin.ch/V_D/OeREB/2.0/ExtractData" xmlns:array="http://www.w3.org/2005/xpath-functions/array">
+<xsl:stylesheet  version="3.0" exclude-result-prefixes="geometry extract data" xmlns:oereb="http://oereb.so.ch" xmlns:geometry="http://www.interlis.ch/geometry/1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:fox="http://xmlgraphics.apache.org/fop/extensions" xmlns:extract="http://schemas.geo.admin.ch/V_D/OeREB/2.0/Extract" xmlns:data="http://schemas.geo.admin.ch/V_D/OeREB/2.0/ExtractData" xmlns:array="http://www.w3.org/2005/xpath-functions/array">
   <xsl:output method="xml" indent="yes"/>
   <xsl:param name="localeUrl" select="'Resources.de.resx'"/>
   <xsl:variable name="localeXml" select="document($localeUrl)/*"/>
@@ -31,6 +31,7 @@
                   <xsl:attribute name="src">
                     <xsl:text>url('data:</xsl:text>
                     <xsl:text>image/png;base64,</xsl:text>
+                    <!--<xsl:message><xsl:value-of select="$OverlayImage"/></xsl:message>-->
                     <xsl:value-of select="oereb:createPlanForLandRegisterMainPageImage(data:RealEstate/data:PlanForLandRegisterMainPage, $OverlayImage)"/>
                     <xsl:text>')</xsl:text>
                   </xsl:attribute>
@@ -399,10 +400,29 @@
                 <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
                 <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
                 <xsl:message><xsl:value-of select="data:Lawstatus/data:Code" /></xsl:message>
-                <xsl:message>+++++++++++++++++++</xsl:message>
+                <xsl:message>Start+++++++++++++++++++</xsl:message>
 
+                <xsl:if test="current-group()/data:Theme/data:SubCode">
+                  <xsl:message>Subthema!!! <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
+                  <xsl:for-each-group select="current-group()" group-by="data:Theme/data:SubCode">
+                    <xsl:message><xsl:value-of select="data:Theme/data:SubCode" /></xsl:message>
+                    <fo:block-container background-color="tomato">
+                      <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
+                        <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                      </fo:block>
+                    </fo:block-container>
+                    <fo:block-container>
+                      <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
+                      <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="wheat">
+                        <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
+                      </fo:block>
+                    </fo:block-container>
+                    <xsl:call-template name="handleRestrictionOnLandownership"/>
+                  </xsl:for-each-group>
+                </xsl:if>
 
                 <xsl:if test="not(current-group()/data:Theme/data:SubCode)">
+                  <xsl:message>Ich bin kein Subthema: <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
                 <!--
                   <xsl:message>Message Message Message</xsl:message>
                   <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
@@ -413,16 +433,14 @@
                     </fo:block>
                   </fo:block-container>
                   <fo:block-container>
-                    <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
                     <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="wheat">
                       <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
                     </fo:block>
                   </fo:block-container>
-                  <!--<xsl:call-template name="handleRestrictionOnLandownership"/>-->
+                  <xsl:call-template name="handleRestrictionOnLandownership"/>
                 </xsl:if>
 
-
-
+                <xsl:message>Ende+++++++++++++++++++</xsl:message>
               </xsl:for-each-group>
             </xsl:for-each-group>
           </fo:block>
@@ -430,6 +448,54 @@
       </fo:page-sequence>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template name="handleRestrictionOnLandownership">
+    <!-- Abstand sind 12mm - 5mm. 1mm ist jedoch bereits vom Untertitel vorhanden. -->
+    <fo:block-container margin-top="6mm" height="105mm" background-color="mediumseagreen">
+      <!-- Das funktioniert nicht, wenn es in einem Thema unterschiedliche Bilder gibt.
+	    Das kann vorkommen, wenn die Bilder z.B. von WMS-Requests mit unterschliedlichen
+	    Layern stammen. Bei uns wäre das bei der "Nutzungsplanung überlagernd" der Fall. 
+	    Diese besteht aus drei Einzellayer. Wir sprechen diese Subthema aber mit dem 
+	    Gruppenlayer-Namen an. -->
+      <!-- Zu Beginn von V2_0 war ich nicht sicher, ob überhaupt mehrere Images/Nodes zu 
+      behandeln sind. Scheint aber doch der Fall zu sein. -->
+      <xsl:if test="data:Map/data:Image">
+        <xsl:for-each-group select="current-group()" group-by="data:Map/data:Image">
+          <xsl:sort order="ascending" select="data:Information/data:LocalisedText/data:Text"/>
+          <fo:block font-size="0pt" padding="0mm" margin="0mm" line-height="0mm">
+            <fo:external-graphic border="0.4pt solid black" width="174mm" height="99mm" scaling="uniform" content-width="scale-to-fit" content-height="scale-to-fit" fox:alt-text="RestrictionOnLandownershipImage">
+              <xsl:attribute name="src">
+                <xsl:text>url('data:</xsl:text>
+                <xsl:text>image/png;base64,</xsl:text>
+                  <xsl:value-of select="oereb:createRestrictionOnLandownershipImages(data:Map, ../data:PlanForLandRegister, $OverlayImage)"/>
+                <xsl:text>')</xsl:text>
+              </xsl:attribute>
+            </fo:external-graphic>
+          </fo:block>
+        </xsl:for-each-group>
+      </xsl:if>
+
+      <xsl:if test="data:Map/data:ReferenceWMS and not(data:Map/data:Image)">
+        <!-- Funktioniert nur, wenn die GetMap-Requests syntaktisch identisch sind. -->
+        <!-- Siehe auch Kommentar oben. -->
+        <xsl:for-each-group select="current-group()" group-by="data:Map/data:ReferenceWMS">
+          <xsl:sort order="ascending" select="data:Information/data:LocalisedText/data:Text"/>
+          <fo:block font-size="0pt" padding="0mm" margin="0mm" line-height="0mm">
+            <fo:external-graphic border="0.4pt solid black" width="174mm" height="99mm" scaling="uniform" content-width="scale-to-fit" content-height="scale-to-fit" fox:alt-text="RestrictionOnLandownershipImage">
+              <xsl:attribute name="src">
+                <xsl:text>url('data:</xsl:text>
+                <xsl:text>image/png;base64,</xsl:text>
+                  <xsl:value-of select="oereb:createRestrictionOnLandownershipImages(data:Map, ../data:PlanForLandRegister, $OverlayImage)"/>
+                <xsl:text>')</xsl:text>
+              </xsl:attribute>
+            </fo:external-graphic>
+          </fo:block>
+        </xsl:for-each-group>
+      </xsl:if>
+    </fo:block-container>
+
+  </xsl:template>
+
   <xsl:template name="insertHeaderAndFooter">
     <fo:static-content flow-name="xsl-region-before">
       <fo:block>

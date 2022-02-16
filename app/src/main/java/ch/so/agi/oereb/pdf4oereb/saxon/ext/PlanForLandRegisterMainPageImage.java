@@ -33,7 +33,7 @@ public class PlanForLandRegisterMainPageImage implements ExtensionFunction {
 
     @Override
     public QName getName() {
-        return new QName("http://oereb.geo.so.ch", "createPlanForLandRegisterMainPageImage");
+        return new QName("http://oereb.so.ch", "createPlanForLandRegisterMainPageImage");
     }
 
     @Override
