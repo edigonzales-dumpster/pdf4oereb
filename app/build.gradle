@@ -25,7 +25,6 @@ dependencies {
     implementation 'net.sf.saxon:Saxon-HE:10.6'
     implementation 'org.apache.xmlgraphics:fop:2.7'
     implementation 'net.sf.offo:fop-hyph:2.0' 
-    //implementation 'org.apache.httpcomponents:httpclient:4.5.6'
     implementation 'org.locationtech.jts:jts-core:1.18.2'
 }
 

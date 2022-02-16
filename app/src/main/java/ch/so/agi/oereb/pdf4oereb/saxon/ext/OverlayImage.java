@@ -231,7 +231,7 @@ public class OverlayImage implements ExtensionFunction {
         byte[] highlightingImageByteArray = baos.toByteArray();
         baos.close();          
 
-        ImageIO.write(overlayImage, "png", new File("/Users/stefan/tmp/overlay_image.png"));        
+        //ImageIO.write(overlayImage, "png", new File("/Users/stefan/tmp/overlay_image.png"));        
         return highlightingImageByteArray;
     }
     

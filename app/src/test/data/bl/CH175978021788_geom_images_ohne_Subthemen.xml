@@ -754,7 +754,6 @@
           </geometry:exterior>
         </geometry:surface>
       </data:Limit>
-
       <data:RestrictionOnLandownership>
         <data:LegendText>
           <data:LocalisedText>
@@ -764,11 +763,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.NutzungsplanungGrundnutzung</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Nutzungsplanung Grundnutzung</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -1354,11 +1352,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.NutzungsplanungGrundnutzung</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Nutzungsplanung Grundnutzung</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -1944,11 +1941,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.NutzungsplanungGrundnutzung</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Grundnutzung</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -2667,7 +2663,6 @@
           <AreaUnit>m2</AreaUnit>
         </data:extensions>
       </data:RestrictionOnLandownership>
-
       <data:RestrictionOnLandownership>
         <data:LegendText>
           <data:LocalisedText>
@@ -2677,11 +2672,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.Baulinien</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Baulinien</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -3155,7 +3149,6 @@
           <LengthUnit>m</LengthUnit>
         </data:extensions>
       </data:RestrictionOnLandownership>
-
       <data:RestrictionOnLandownership>
         <data:LegendText>
           <data:LocalisedText>
@@ -3165,11 +3158,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.NutzungsplanungUeberlagernd</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Nutzungsplanung überlagernd</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -6420,7 +6412,6 @@
           <AreaUnit>m2</AreaUnit>
         </data:extensions>
       </data:RestrictionOnLandownership>
-
       <data:RestrictionOnLandownership>
         <data:LegendText>
           <data:LocalisedText>
@@ -6430,11 +6421,10 @@
         </data:LegendText>
         <data:Theme>
           <data:Code>ch.Nutzungsplanung</data:Code>
-          <data:SubCode>ch.SO.NutzungsplanungUeberlagernd</data:SubCode>
           <data:Text>
             <data:LocalisedText>
               <data:Language>de</data:Language>
-              <data:Text>Nutzungsplanung überlagernd</data:Text>
+              <data:Text>Nutzungsplanung (kantonal/kommunal)</data:Text>
             </data:LocalisedText>
           </data:Text>
         </data:Theme>
@@ -10517,7 +10507,6 @@
           <AreaUnit>m2</AreaUnit>
         </data:extensions>
       </data:RestrictionOnLandownership>
-
       <data:RestrictionOnLandownership>
         <data:LegendText>
           <data:LocalisedText>

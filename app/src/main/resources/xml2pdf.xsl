@@ -375,11 +375,60 @@
               </fo:footnote>
             </fo:block>
           </fo:block-container>
-
         </fo:flow>
       </fo:page-sequence>
+      <xsl:apply-templates select="data:RealEstate" mode="sheet"/>
       <xsl:call-template name="insertGlossary"/>
     </fo:root>
+  </xsl:template>
+  <xsl:template match="data:RealEstate" mode="sheet">
+    <xsl:if test="(../data:ConcernedTheme)">
+      <fo:page-sequence master-reference="mainPage" id="page-sequence-id">
+        <xsl:call-template name="insertHeaderAndFooter"/>
+        <fo:flow flow-name="xsl-region-body">
+          <fo:block>
+            <!-- Rechtsgültige Eigentumsbeschränkungen (inKraft) müssen vor laufenden Änderungen erscheinen. -->
+            <xsl:for-each-group select="data:RestrictionOnLandownership" group-by="data:Theme/data:Code">
+            <!--
+              <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
+              <xsl:message><xsl:value-of select="data:Lawstatus/data:Code" /></xsl:message>
+              <xsl:message>*******************</xsl:message>
+            -->
+
+              <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
+                <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+                <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
+                <xsl:message><xsl:value-of select="data:Lawstatus/data:Code" /></xsl:message>
+                <xsl:message>+++++++++++++++++++</xsl:message>
+
+
+                <xsl:if test="not(current-group()/data:Theme/data:SubCode)">
+                <!--
+                  <xsl:message>Message Message Message</xsl:message>
+                  <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
+                -->
+                  <fo:block-container background-color="thistle">
+                    <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
+                      <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                    </fo:block>
+                  </fo:block-container>
+                  <fo:block-container>
+                    <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
+                    <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="wheat">
+                      <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
+                    </fo:block>
+                  </fo:block-container>
+                  <!--<xsl:call-template name="handleRestrictionOnLandownership"/>-->
+                </xsl:if>
+
+
+
+              </xsl:for-each-group>
+            </xsl:for-each-group>
+          </fo:block>
+        </fo:flow>
+      </fo:page-sequence>
+    </xsl:if>
   </xsl:template>
   <xsl:template name="insertHeaderAndFooter">
     <fo:static-content flow-name="xsl-region-before">
@@ -534,7 +583,7 @@
               <fo:table-column column-width="174mm"/>
               <fo:table-body>
                 <xsl:for-each select="data:Glossary">
-                  <xsl:sort select="data:Title/data:LocalisedText[1]/data:Text"/>
+                  <xsl:sort select="data:Title/data:LocalisedText[1]/data:Text" lang="de-CH"/>
                   <fo:table-row border-bottom="0.4pt solid black" vertical-align="middle" line-height="11pt">
                     <fo:table-cell padding-top="1mm" padding-bottom="1mm">
                       <fo:block>
