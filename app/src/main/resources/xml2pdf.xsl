@@ -419,7 +419,7 @@
                   <xsl:for-each-group select="current-group()" group-by="data:Theme/data:SubCode">
                     <xsl:message><xsl:value-of select="data:Theme/data:SubCode" /></xsl:message>
                     <xsl:message>third level: <xsl:value-of select="count(current-group())"/></xsl:message>  
-                    <fo:block-container background-color="tomato">
+                    <fo:block-container background-color="transparent">
                       <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
                         <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
                       </fo:block>
@@ -440,7 +440,7 @@
                   <xsl:message>Message Message Message</xsl:message>
                   <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
                 -->
-                  <fo:block-container background-color="thistle">
+                  <fo:block-container background-color="transparent">
                     <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
                       <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
                     </fo:block>
