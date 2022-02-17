@@ -395,16 +395,30 @@
               <xsl:message>*******************</xsl:message>
             -->
 
+              <!--<xsl:message>first level: <xsl:value-of select="count(current-group())"/></xsl:message>-->  
+
+
               <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
                 <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+                <!--
                 <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
                 <xsl:message><xsl:value-of select="data:Lawstatus/data:Code" /></xsl:message>
+                -->
                 <xsl:message>Start+++++++++++++++++++</xsl:message>
+
+                <!--<xsl:message>second level: <xsl:value-of select="count(current-group())"/></xsl:message>-->  
 
                 <xsl:if test="current-group()/data:Theme/data:SubCode">
                   <xsl:message>Subthema!!! <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
+
+                  <!--
+                  <xsl:message>count: <xsl:value-of select="count(data:LegendText/data:LocalisedText/data:Text)"/></xsl:message>  
+                  <xsl:message>count: <xsl:value-of select="data:LegendText/data:LocalisedText/data:Text"/></xsl:message>  
+                  -->
+
                   <xsl:for-each-group select="current-group()" group-by="data:Theme/data:SubCode">
                     <xsl:message><xsl:value-of select="data:Theme/data:SubCode" /></xsl:message>
+                    <xsl:message>third level: <xsl:value-of select="count(current-group())"/></xsl:message>  
                     <fo:block-container background-color="tomato">
                       <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
                         <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
@@ -412,7 +426,7 @@
                     </fo:block-container>
                     <fo:block-container>
                       <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
-                      <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="wheat">
+                      <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
                         <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
                       </fo:block>
                     </fo:block-container>
@@ -432,7 +446,7 @@
                     </fo:block>
                   </fo:block-container>
                   <fo:block-container>
-                    <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="wheat">
+                    <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
                       <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
                     </fo:block>
                   </fo:block-container>
@@ -449,15 +463,37 @@
   </xsl:template>
 
   <xsl:template name="handleRestrictionOnLandownership">
+    
+    <!--
+    <xsl:message>??fubar</xsl:message>  
+    <xsl:message><xsl:value-of select="count(current-group())"/></xsl:message>  
+    <xsl:for-each-group select="current-group()" group-by="data:TypeCode">
+      <xsl:message>TypeCode: <xsl:value-of select="data:TypeCode"/></xsl:message>  
+    </xsl:for-each-group>
+    -->
+
     <!-- Abstand sind 12mm - 5mm. 1mm ist jedoch bereits vom Untertitel vorhanden. -->
-    <fo:block-container margin-top="6mm" height="105mm" background-color="mediumseagreen">
+    <fo:block-container margin-top="6mm" height="105mm" background-color="transparent">
       <!-- Das funktioniert nicht, wenn es in einem Thema unterschiedliche Bilder gibt.
 	    Das kann vorkommen, wenn die Bilder z.B. von WMS-Requests mit unterschliedlichen
 	    Layern stammen. Bei uns wäre das bei der "Nutzungsplanung überlagernd" der Fall. 
 	    Diese besteht aus drei Einzellayer. Wir sprechen diese Subthema aber mit dem 
 	    Gruppenlayer-Namen an. -->
       <!-- Zu Beginn von V2_0 war ich nicht sicher, ob überhaupt mehrere Images/Nodes zu 
-      behandeln sind. Scheint aber doch der Fall zu sein. -->
+      behandeln sind. Scheint aber doch der Fall zu sein.
+      Morgen danach: Nein, es kann nur immer ein Image/Node sein. Ich lass aber den 
+      Code und die Logik (auch in der Extension Function) wie in V1_0 bis auf 
+      Weiteres.-->
+      <!-- Wenn wir hier die current-group() wiederum gruppieren und zwar gruppiert natürlich
+      dem Image, gibt es logischerweiser nur noch ein Image, d.h. es darf nur noch ein Image
+      geben. Aus diesem Grund könnte man den Code wohl schon vereinfachen. (Aber Achtung: das 
+      Image alleine reicht nicht, ich brauche layerIndex und Opazität.)
+      Das Ganze funktioniert abr wie im ersten Kommentar erwähnt nur, wenn es unterschiedliche 
+      Bilder sind, z.B. für jede Grundnutzung nur die jeweilige Grundnutzung etc. Dann muss aber 
+      zwingen alles andere transparent sein. Die unterschiedlichen Verhalten könnte man wohl 
+      schon generisch lösen. Dieser Code hier (inkl. Extension Function) müsste aber angepasst 
+      werden.
+      -->
       <xsl:if test="data:Map/data:Image">
         <xsl:for-each-group select="current-group()" group-by="data:Map/data:Image">
           <xsl:sort order="ascending" select="data:Information/data:LocalisedText/data:Text"/>
@@ -491,6 +527,509 @@
           </fo:block>
         </xsl:for-each-group>
       </xsl:if>
+    </fo:block-container>
+    <fo:block-container font-size="8pt" background-color="transparent">
+      <fo:table table-layout="fixed" width="100%">
+        <fo:table-column column-width="68mm"/>
+        <fo:table-column column-width="10mm"/>
+        <fo:table-column column-width="59mm"/>
+        <fo:table-column column-width="20mm"/>
+        <fo:table-column column-width="17mm"/>
+        <fo:table-body>
+          <fo:table-row border-bottom="0.4pt solid black" vertical-align="middle" line-height="5mm">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell text-align="left">
+              <fo:block font-size="6pt">
+                <xsl:value-of select="$localeXml/data[@name='RestrictionPage.Type']/value/text()"/>
+              </fo:block>
+            </fo:table-cell>
+            <fo:table-cell text-align="right">
+              <fo:block font-size="6pt">
+                <xsl:value-of select="$localeXml/data[@name='RestrictionPage.Share']/value/text()"/>
+              </fo:block>
+            </fo:table-cell>
+            <fo:table-cell text-align="right">
+              <fo:block font-size="6pt">
+                <xsl:value-of select="$localeXml/data[@name='RestrictionPage.PartInPercent']/value/text()"/>
+              </fo:block>
+            </fo:table-cell>
+          </fo:table-row>
+          <fo:table-row min-height="1.5mm">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+          <!-- Die Gruppierung ist exotisch bis gewagt. Auslöser ist der Umstand, dass die Kombiniation
+	        TypeCode und TypeCodeList nicht eindeutig ist. In V1_0 wird erwähnt, dass das bei uns in der NPL
+          bei geschützten Objekten (N820/N821) der Fall ist. Diese unterscheiden sich aber in der Artcodeliste.
+          Jedoch sind nun die KbS des Bundes problematisch, da dort Punkt- und Flächengeometrien mit identischem
+          Artcode und Artcodeliste geliefert werden. Im Gegensatz zu V1_0 sind die Symbole nun unterschiedlich.
+
+	        Aus diesem Grund muss der Geometrietyp beim Gruppieren mitberücksichtigt werden. Das erreicht man,
+	        indem man prüft, ob AreaShare, LengthShare oder NrOfPoints-Elemente vorhanden sind (nicht deren 
+	        Werte).
+	         -->
+          <xsl:for-each-group select="current-group()" group-by="concat(data:TypeCode, data:TypeCodeList, string(exists(data:AreaShare)), string(exists(data:LengthShare)), string(exists(data:NrOfPoints)))">
+            <xsl:sort lang="de" order="ascending" select="data:Information/data:LocalisedText/data:Text"/>
+            <!--<fo:block linefeed-treatment="preserve" font-weight="400" font-size="11pt" font-family="Cadastra"><xsl:value-of select="data:Information/data:LocalisedText/data:Text"/></fo:block>-->
+            <fo:table-row vertical-align="middle" line-height="5mm">
+              <fo:table-cell>
+                <xsl:if test="position()=1">
+                  <fo:block font-weight="700">
+                    <xsl:value-of select="$localeXml/data[@name='RestrictionPage.Legend']/value/text()"/>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="position()!=1">
+                  <fo:block/>
+                </xsl:if>
+              </fo:table-cell>
+              <fo:table-cell display-align="before">
+                <fo:block font-size="0pt" padding="0.5mm" margin="0mm" line-height="0mm">
+                  <fo:external-graphic width="6mm" height="3mm" content-width="scale-to-fit" content-height="scale-to-fit" scaling="uniform" fox:alt-text="Symbol">
+                    <xsl:if test="data:Symbol">
+                      <xsl:attribute name="src">
+                        <xsl:text>url('data:</xsl:text>
+                        <xsl:text>image/png;base64,</xsl:text>
+                        <xsl:value-of select="oereb:fixImage(data:Symbol)"/>
+                        <xsl:text>')</xsl:text>
+                      </xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="data:SymbolRef and not(data:Symbol)">
+                      <xsl:attribute name="src">
+                        <xsl:text>url('data:</xsl:text>
+                        <xsl:text>image/png;base64,</xsl:text>
+                        <xsl:value-of select="oereb:fixImage(data:SymbolRef)"/>
+                        <xsl:text>')</xsl:text>
+                      </xsl:attribute>
+                    </xsl:if>
+                  </fo:external-graphic>
+                </fo:block>
+              </fo:table-cell>
+              <fo:table-cell display-align="center" text-align="left" line-height="11pt">
+                <fo:block>
+                  <xsl:value-of select="data:LegendText/data:LocalisedText[1]/data:Text"/>
+                </fo:block>
+                <!-- Zum Testen der Summenbildung und Gruppierung-->
+                <!--<xsl:message>TypeCode: <xsl:value-of select="data:TypeCode"/></xsl:message>-->
+              </fo:table-cell>
+              <fo:table-cell text-align="right">
+                <xsl:if test="data:AreaShare">
+                  <fo:block line-height-shift-adjustment="disregard-shifts">
+                    <xsl:choose>
+                      <xsl:when test="sum(current-group()/data:AreaShare) &lt; 0.1">
+                        <xsl:text>&lt; 0.1</xsl:text>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="format-number(sum(current-group()/data:AreaShare), &quot;#'###&quot;, &quot;swiss&quot;)"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text> m</xsl:text>
+                    <fo:inline baseline-shift="super" font-size="60%">2</fo:inline>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="data:LengthShare">
+                  <fo:block line-height-shift-adjustment="disregard-shifts">
+                    <xsl:choose>
+                      <xsl:when test="sum(current-group()/data:LengthShare) &lt; 0.1">
+                        <xsl:text>&lt; 0.1</xsl:text>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="format-number(sum(current-group()/data:LengthShare), &quot;#'###&quot;, &quot;swiss&quot;)"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text> m</xsl:text>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="data:NrOfPoints">
+                  <fo:block line-height-shift-adjustment="disregard-shifts">
+                    <xsl:value-of select="format-number(sum(current-group()/data:NrOfPoints), &quot;#'###&quot;, &quot;swiss&quot;)"/> Elemente
+                  </fo:block>
+                </xsl:if>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell text-align="right">
+                <xsl:if test="data:PartInPercent">
+                  <fo:block>
+                    <xsl:choose>
+                      <xsl:when test="sum(current-group()/data:PartInPercent) &lt; 0.1">
+                        <xsl:text>&lt; 0.1</xsl:text>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="format-number(sum(current-group()/data:PartInPercent), &quot;#'##0.0&quot;, &quot;swiss&quot;)"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                    <xsl:text>%</xsl:text>
+                  </fo:block>
+                </xsl:if>
+                <fo:block/>
+              </fo:table-cell>
+            </fo:table-row>
+          </xsl:for-each-group>
+          <fo:table-row min-height="1mm">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row> 
+        </fo:table-body>
+      </fo:table>
+    </fo:block-container>
+    <xsl:if test="current-group()/data:Map/data:OtherLegend">
+      <fo:block-container font-size="8pt" background-color="transparent">
+        <fo:table table-layout="fixed" width="100%">
+          <fo:table-column column-width="68mm"/>
+          <fo:table-column column-width="10mm"/>
+          <fo:table-column column-width="59mm"/>
+          <fo:table-column column-width="20mm"/>
+          <fo:table-column column-width="17mm"/>
+          <fo:table-body>
+            <fo:table-row min-height="1mm" border-top="0.4pt solid black">
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+            </fo:table-row>
+            <!-- Siehe Kommentare in V1_0. Die Anforderungen sind tricky.-->
+            <xsl:variable name="restrictionInformation" select="../data:RestrictionOnLandownership/data:LegendText[1]/data:LocalisedText/data:Text"/>
+            <xsl:variable name="restrictionTypeCodeList" select="../data:RestrictionOnLandownership/data:TypeCodeList"/>
+            <xsl:for-each-group select="current-group()/data:Map/data:OtherLegend[not(data:LegendText/data:LocalisedText[1]/data:Text = $restrictionInformation) and not(data:TypeCodeList = $restrictionTypeCodeList)]" group-by="concat(data:TypeCode, '|', data:TypeCodelist)">
+              <xsl:sort lang="de" order="ascending" select="data:LegendText/data:LocalisedText[1]/data:Text"/>
+              <fo:table-row vertical-align="middle" line-height="5mm">
+                <fo:table-cell>
+                  <xsl:if test="position()=1">
+                    <fo:block font-weight="700">
+                      <xsl:value-of select="$localeXml/data[@name='RestrictionPage.OtherLegend']/value/text()"/>
+                    </fo:block>
+                  </xsl:if>
+                  <xsl:if test="position()!=1">
+                    <fo:block/>
+                  </xsl:if>
+                </fo:table-cell>
+                <fo:table-cell display-align="before">
+                  <fo:block font-size="0pt" padding="0.5mm" margin="0mm" line-height="0mm">
+                    <fo:external-graphic width="6mm" height="3mm" content-width="scale-to-fit" content-height="scale-to-fit" scaling="uniform" fox:alt-text="Symbol">
+                      <xsl:if test="data:Symbol">
+                        <xsl:attribute name="src">
+                          <xsl:text>url('data:</xsl:text>
+                          <xsl:text>image/png;base64,</xsl:text>
+                          <xsl:value-of select="oereb:fixImage(data:Symbol)"/>
+                          <xsl:text>')</xsl:text>
+                        </xsl:attribute>
+                      </xsl:if>
+                      <xsl:if test="data:SymbolRef and not(data:Symbol)">
+                        <xsl:attribute name="src">
+                          <xsl:text>url('data:</xsl:text>
+                          <xsl:text>image/png;base64,</xsl:text>
+                          <xsl:value-of select="oereb:fixImage(data:SymbolRef)"/>
+                          <xsl:text>')</xsl:text>
+                        </xsl:attribute>
+                      </xsl:if>
+                    </fo:external-graphic>
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell display-align="center" text-align="left" line-height="11pt">
+                  <fo:block>
+                    <xsl:value-of select="data:LegendText/data:LocalisedText[1]/data:Text"/>
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell text-align="right">
+                  <!-- This is just to get the same line height as in the table above. -->
+                  <fo:block line-height-shift-adjustment="disregard-shifts" color="white" visibility="hidden">
+                    <xsl:text>m</xsl:text>
+                    <fo:inline baseline-shift="super" font-size="60%">
+                      <xsl:text> </xsl:text>
+                    </fo:inline>
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell text-align="right">
+                  <fo:block/>
+                </fo:table-cell>
+              </fo:table-row>
+            </xsl:for-each-group>
+            <fo:table-row min-height="1mm" border-bottom="0.4pt solid black">
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+            </fo:table-row>
+          </fo:table-body>
+        </fo:table>
+      </fo:block-container>
+    </xsl:if>  
+    <fo:block-container font-weight="400" font-size="8pt" background-color="transparent">
+      <fo:table table-layout="fixed" width="100%">
+        <fo:table-column column-width="68mm"/>
+        <fo:table-column column-width="106mm"/>
+        <fo:table-body>
+          <fo:table-row min-height="1mm" border-top="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+          <xsl:for-each-group select="current-group()/data:LegalProvisions[data:Type/data:Code='LegalProvision']" group-by="data:TextAtWeb/data:LocalisedText[1]/data:Text">
+            <xsl:sort lang="de" order="ascending" select="data:Index"/>
+            <xsl:sort lang="de" order="ascending" select="data:Title/data:LocalisedText[1]/data:Text"/>
+            <fo:table-row font-weight="400">
+              <fo:table-cell padding-top="1.5pt">
+                <xsl:if test="position()=1">
+                  <fo:block font-weight="700">
+                    <xsl:value-of select="$localeXml/data[@name='RestrictionPage.LegalProvision']/value/text()"/>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="position()!=1">
+                  <fo:block/>
+                </xsl:if>
+              </fo:table-cell>
+              <fo:table-cell padding-top="1.5pt" padding-bottom="1.5pt">
+                <fo:block font-size="8pt" line-height="11pt">
+                  <xsl:choose>
+                    <xsl:when test="data:OfficialNumber"><xsl:value-of select="data:Title/data:LocalisedText[1]/data:Text"/>, <xsl:value-of select="data:OfficialNumber/data:LocalisedText[1]/data:Text"/><xsl:text>:</xsl:text></xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="data:Title/data:LocalisedText[1]/data:Text"/>
+                      <xsl:text>:</xsl:text>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </fo:block>
+                <fo:block font-size="6pt" line-height="8pt" margin-left="3mm" margin-top="0mm">
+                  <fo:basic-link text-decoration="none" color="rgb(76,143,186)">
+                    <xsl:attribute name="external-destination">
+                      <xsl:value-of select="oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text)"/>
+                    </xsl:attribute>
+                    <!-- https://stackoverflow.com/questions/4350788/xsl-fo-force-wrap-on-table-entries/33689540#33689540 -->
+                    <xsl:value-of select="replace(replace(oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text), '(\P{Zs}{13})', '$1​'), '​(\p{Zs})','$1')"/>
+                  </fo:basic-link>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </xsl:for-each-group>
+          <fo:table-row min-height="1mm" border-bottom="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+        </fo:table-body>
+      </fo:table>
+    </fo:block-container>
+    <fo:block-container font-weight="400" font-size="8pt" background-color="transparent">
+      <fo:table table-layout="fixed" width="100%">
+        <fo:table-column column-width="68mm"/>
+        <fo:table-column column-width="106mm"/>
+        <fo:table-body>
+          <fo:table-row min-height="1mm" border-top="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+          <xsl:for-each-group select="current-group()/data:LegalProvisions[data:Type/data:Code='Law']" group-by="data:TextAtWeb/data:LocalisedText[1]/data:Text">
+            <xsl:sort lang="de" order="ascending" select="data:Index"/>
+            <xsl:sort lang="de" order="ascending" select="data:Title/data:LocalisedText[1]/data:Text"/>
+            <fo:table-row font-weight="400">
+              <fo:table-cell background-color="transparent" padding-top="1.5pt">
+                <xsl:if test="position()=1">
+                  <fo:block font-weight="700">
+                    <xsl:value-of select="$localeXml/data[@name='RestrictionPage.Law']/value/text()"/>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="position()!=1">
+                  <fo:block/>
+                </xsl:if>
+              </fo:table-cell>
+              <fo:table-cell background-color="transparent" padding-top="1.5pt" padding-bottom="1.5pt">
+                <fo:block font-size="8pt" line-height="11pt">
+                  <xsl:value-of select="data:Title/data:LocalisedText[1]/data:Text"/>
+                  <xsl:if test="data:Abbreviation/data:LocalisedText[1]/data:Text">
+                    <xsl:text> (</xsl:text>
+                    <xsl:value-of select="data:Abbreviation/data:LocalisedText[1]/data:Text"/>
+                    <xsl:text>)</xsl:text>
+                  </xsl:if>
+                  <xsl:if test="data:OfficialNumber">
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="data:OfficialNumber/data:LocalisedText[1]/data:Text"/>
+                  </xsl:if>
+                  <xsl:text>:</xsl:text>
+                </fo:block>
+                <fo:block font-size="6pt" line-height="8pt" margin-left="3mm" margin-top="0mm">
+                  <fo:basic-link text-decoration="none" color="rgb(76,143,186)">
+                    <xsl:attribute name="external-destination">
+                      <xsl:value-of select="oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="replace(replace(oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text), '(\P{Zs}{13})', '$1​'), '​(\p{Zs})','$1')"/>
+                  </fo:basic-link>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </xsl:for-each-group>
+          <fo:table-row min-height="1mm" border-bottom="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+        </fo:table-body>
+      </fo:table>
+    </fo:block-container>
+    <xsl:if test="current-group()/data:LegalProvisions[data:Type/data:Code='Hint']">
+      <fo:block-container font-weight="400" font-size="8pt" background-color="transparent">
+        <fo:table table-layout="fixed" width="100%">
+          <fo:table-column column-width="68mm"/>
+          <fo:table-column column-width="106mm"/>
+          <fo:table-body>
+            <fo:table-row min-height="1mm" border-top="0.4pt solid black" vertical-align="middle" line-height="5mm">
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+            </fo:table-row>
+            <xsl:for-each-group select="current-group()/data:LegalProvisions[data:Type/data:Code='Hint']" group-by="data:TextAtWeb/data:LocalisedText[1]/data:Text">
+              <xsl:sort lang="de" order="ascending" select="data:Index"/>
+              <xsl:sort lang="de" order="ascending" select="data:Title/data:LocalisedText[1]/data:Text"/>
+              <fo:table-row vertical-align="middle" line-height="5mm" font-weight="400">
+                <fo:table-cell>
+                  <xsl:if test="position()=1">
+                    <fo:block font-weight="700">
+                      <xsl:value-of select="$localeXml/data[@name='RestrictionPage.Hint']/value/text()"/>
+                    </fo:block>
+                  </xsl:if>
+                  <xsl:if test="position()!=1">
+                    <fo:block/>
+                  </xsl:if>
+                </fo:table-cell>
+                <fo:table-cell display-align="center">
+                  <fo:block font-size="8pt" line-height="11pt">
+                    <xsl:value-of select="data:Title/data:LocalisedText[1]/data:Text"/>
+                    <xsl:text>:</xsl:text>
+                  </fo:block>
+                  <fo:block font-size="6pt" line-height="8pt" margin-left="3mm" margin-top="0mm">
+                    <fo:basic-link text-decoration="none" color="rgb(76,143,186)">
+                      <xsl:attribute name="external-destination">
+                        <xsl:value-of select="oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text)"/>
+                      </xsl:attribute>
+                      <xsl:value-of select="replace(replace(oereb:decodeURL(data:TextAtWeb/data:LocalisedText[1]/data:Text), '(\P{Zs}{13})', '$1​'), '​(\p{Zs})','$1')"/>
+                    </fo:basic-link>
+                  </fo:block>
+                </fo:table-cell>
+              </fo:table-row>
+            </xsl:for-each-group>
+            <fo:table-row min-height="1mm" border-bottom="0.4pt solid black" vertical-align="middle" line-height="5mm">
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+              <fo:table-cell>
+                <fo:block/>
+              </fo:table-cell>
+            </fo:table-row>
+          </fo:table-body>
+        </fo:table>
+      </fo:block-container>
+    </xsl:if>
+    <fo:block-container font-weight="400" font-size="8pt" background-color="transparent">
+      <fo:table table-layout="fixed" width="100%">
+        <fo:table-column column-width="68mm"/>
+        <fo:table-column column-width="106mm"/>
+        <fo:table-body>
+          <fo:table-row min-height="1mm" border-top="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+          <!-- <xsl:for-each-group select="current-group()/data:LegalProvisions/data:ResponsibleOffice" group-by="data:Name">  -->
+          <xsl:for-each-group select="current-group()/data:ResponsibleOffice" group-by="data:Name">
+            <xsl:sort lang="de" order="ascending" select="data:Name/data:LocalisedText[1]/data:Text"/>
+            <fo:table-row line-height="5mm" font-weight="400">
+              <fo:table-cell padding-top="1.5pt">
+                <xsl:if test="position()=1">
+                  <fo:block font-weight="700">
+                    <xsl:value-of select="$localeXml/data[@name='RestrictionPage.ResponsibleOffice']/value/text()"/>
+                  </fo:block>
+                </xsl:if>
+                <xsl:if test="position()!=1">
+                  <fo:block/>
+                </xsl:if>
+              </fo:table-cell>
+              <fo:table-cell padding-top="1.5pt" padding-bottom="1.5pt">
+                <fo:block font-size="8pt">
+                  <xsl:value-of select="data:Name/data:LocalisedText[1]/data:Text"/>
+                  <xsl:text>:</xsl:text>
+                </fo:block>
+                <fo:block font-size="6pt" line-height="8pt" margin-left="3mm" margin-top="-1mm">
+                  <fo:basic-link text-decoration="none" color="rgb(76,143,186)">
+                    <xsl:attribute name="external-destination">
+                      <xsl:value-of select="oereb:decodeURL(data:OfficeAtWeb/data:LocalisedText[1]/data:Text)"/>
+                    </xsl:attribute>
+                    <!-- https://stackoverflow.com/questions/4350788/xsl-fo-force-wrap-on-table-entries/33689540#33689540 -->
+                    <xsl:value-of select="replace(replace(oereb:decodeURL(data:OfficeAtWeb/data:LocalisedText[1]/data:Text), '(\P{Zs}{13})', '$1​'), '​(\p{Zs})','$1')"/>
+                  </fo:basic-link>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </xsl:for-each-group>
+          <fo:table-row min-height="1mm" border-bottom="0.4pt solid black">
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+            <fo:table-cell>
+              <fo:block/>
+            </fo:table-cell>
+          </fo:table-row>
+        </fo:table-body>
+      </fo:table>
     </fo:block-container>
 
   </xsl:template>

@@ -846,7 +846,7 @@
             </fo:table-row>
             <xsl:for-each-group select="current-group()/data:LegalProvisions[data:DocumentType='Hint']" group-by="data:TextAtWeb/data:LocalisedText/data:Text">
               <xsl:sort lang="de" order="descending" select="data:Title/data:LocalisedText/data:Text"/>
-              <fo:table-row vertical-align="middle" line-height="5mm" font-weight="400">
+              <fo:table-row padding-top="3.5pt" line-height="5mm" font-weight="400">
                 <fo:table-cell>
                   <xsl:if test="position()=1">
                     <fo:block font-weight="700">
