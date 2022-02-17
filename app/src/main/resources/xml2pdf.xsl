@@ -219,11 +219,10 @@
               <fo:leader leader-pattern="rule" leader-length="100%" rule-style="solid" rule-thickness="0.4pt"/>
             </fo:block>
           </fo:block-container>
+          
           <!-- Inhaltsverzeichnis -->
-          <!--<xsl:apply-templates select="data:RealEstate" mode="toc"/>-->
-          <!--Dummy Start (wieder löschen)-->
-          <fo:block margin-top="10mm"></fo:block>
-          <!--Dummy Ende-->
+          <xsl:apply-templates select="data:RealEstate" mode="toc"/>
+
           <fo:block-container background-color="transparent">
             <fo:block line-height="11pt" linefeed-treatment="preserve" font-weight="700" font-size="8pt">
               <xsl:value-of select="$localeXml/data[@name='ContentPage.NotConcernedTheme']/value/text()"/>
@@ -382,6 +381,7 @@
       <xsl:call-template name="insertGlossary"/>
     </fo:root>
   </xsl:template>
+
   <xsl:template match="data:RealEstate" mode="sheet">
     <xsl:if test="(../data:ConcernedTheme)">
       <fo:page-sequence master-reference="mainPage" id="page-sequence-id">
@@ -397,9 +397,10 @@
 
               <!--<xsl:message>first level: <xsl:value-of select="count(current-group())"/></xsl:message>-->  
 
-
+<!--
               <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
                 <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+-->
                 <!--
                 <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text" /></xsl:message>
                 <xsl:message><xsl:value-of select="data:Lawstatus/data:Code" /></xsl:message>
@@ -409,7 +410,7 @@
                 <!--<xsl:message>second level: <xsl:value-of select="count(current-group())"/></xsl:message>-->  
 
                 <xsl:if test="current-group()/data:Theme/data:SubCode">
-                  <xsl:message>Subthema!!! <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
+                  <!--<xsl:message>Subthema!!! <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>-->
 
                   <!--
                   <xsl:message>count: <xsl:value-of select="count(data:LegendText/data:LocalisedText/data:Text)"/></xsl:message>  
@@ -417,49 +418,153 @@
                   -->
 
                   <xsl:for-each-group select="current-group()" group-by="data:Theme/data:SubCode">
-                    <xsl:message><xsl:value-of select="data:Theme/data:SubCode" /></xsl:message>
-                    <xsl:message>third level: <xsl:value-of select="count(current-group())"/></xsl:message>  
-                    <fo:block-container background-color="transparent">
-                      <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
-                        <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
-                      </fo:block>
-                    </fo:block-container>
-                    <fo:block-container>
-                      <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
-                      <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
-                        <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
-                      </fo:block>
-                    </fo:block-container>
-                    <xsl:call-template name="handleRestrictionOnLandownership"/>
+
+                    <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
+                      <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+
+                      <!--<xsl:message><xsl:value-of select="data:Theme/data:SubCode" /></xsl:message>-->
+                      <!--<xsl:message>third level: <xsl:value-of select="count(current-group())"/></xsl:message>  -->
+                      <fo:block-container background-color="transparent">
+                        <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
+                          <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                        </fo:block>
+                      </fo:block-container>
+                      <fo:block-container>
+                        <!-- 2mm sind circa. 3mm sind bereits vorhanden. Kann nicht (?) besser gesteuert werden.-->
+                        <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
+                          <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
+                        </fo:block>
+                      </fo:block-container>
+                      <xsl:call-template name="handleRestrictionOnLandownership"/>
+                    </xsl:for-each-group>
                   </xsl:for-each-group>
                 </xsl:if>
 
                 <xsl:if test="not(current-group()/data:Theme/data:SubCode)">
-                  <xsl:message>Ich bin kein Subthema: <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
+                  <!--<xsl:message>Ich bin kein Subthema: <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>-->
                 <!--
                   <xsl:message>Message Message Message</xsl:message>
                   <xsl:message><xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/></xsl:message>
                 -->
-                  <fo:block-container background-color="transparent">
-                    <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
-                      <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
-                    </fo:block>
-                  </fo:block-container>
-                  <fo:block-container>
-                    <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
-                      <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
-                    </fo:block>
-                  </fo:block-container>
-                  <xsl:call-template name="handleRestrictionOnLandownership"/>
+
+                    <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
+                      <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+
+                      <fo:block-container background-color="transparent">
+                        <fo:block id="{generate-id()}" page-break-before="always" linefeed-treatment="preserve" font-weight="700" font-size="15pt" line-height="18pt">
+                          <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                        </fo:block>
+                      </fo:block-container>
+                      <fo:block-container>
+                        <fo:block margin-top="2mm" font-size="8pt" line-height="11pt" font-weight="700" background-color="transparent">
+                          <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"/>
+                        </fo:block>
+                      </fo:block-container>
+                      <xsl:call-template name="handleRestrictionOnLandownership"/>
+                  </xsl:for-each-group>
                 </xsl:if>
 
                 <xsl:message>Ende+++++++++++++++++++</xsl:message>
               </xsl:for-each-group>
-            </xsl:for-each-group>
+            <!--</xsl:for-each-group>-->
           </fo:block>
         </fo:flow>
       </fo:page-sequence>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="data:RealEstate" mode="toc">
+    <fo:block-container margin-bottom="10mm" font-size="8pt" background-color="transparent">
+      <fo:block>
+        <xsl:choose>
+          <xsl:when test="(../data:ConcernedTheme)">
+            <fo:table table-layout="fixed" width="100%">
+              <fo:table-column column-width="7mm"/>
+              <fo:table-column column-width="167mm"/>
+              <fo:table-body>
+                <fo:table-row vertical-align="middle">
+                  <fo:table-cell>
+                    <fo:block margin-top="1mm" margin-bottom="2.8mm" font-weight="700" font-size="6pt">
+                      <xsl:value-of select="$localeXml/data[@name='Page']/value/text()"/>
+                    </fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block/>
+                  </fo:table-cell>
+                </fo:table-row>
+                <xsl:for-each-group select="data:RestrictionOnLandownership" group-by="data:Theme/data:Code">
+                    
+                    <xsl:if test="current-group()/data:Theme/data:SubCode">
+                      <xsl:for-each-group select="current-group()" group-by="data:Theme/data:SubCode">
+                        <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
+                          <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+
+                          <fo:table-row line-height="6mm" border-bottom="0.4pt solid black" vertical-align="middle">
+                            <fo:table-cell>
+                              <fo:block>
+                                <fo:basic-link internal-destination="{generate-id(.)}">
+                                  <fo:page-number-citation ref-id="{generate-id(.)}"/>
+                                </fo:basic-link>
+                              </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell>
+                              <fo:block>
+                                <fo:basic-link internal-destination="{generate-id(.)}">
+                                  <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                                  <xsl:if test="not(data:Lawstatus/data:Code = 'inForce')">
+                                    <xsl:text> (</xsl:text>
+                                    <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"></xsl:value-of>
+                                    <xsl:text>)</xsl:text>
+                                  </xsl:if>
+                                </fo:basic-link>
+                              </fo:block>
+                            </fo:table-cell>
+                          </fo:table-row>
+
+                        </xsl:for-each-group>
+                      </xsl:for-each-group>
+                    </xsl:if>
+
+                    <xsl:if test="not(current-group()/data:Theme/data:SubCode)">
+                      <xsl:for-each-group select="current-group()" group-by="data:Lawstatus/data:Code">
+                        <xsl:sort data-type="number" order="ascending" select="(number(data:Lawstatus/data:Code='inForce') * 1) + (number(data:Lawstatus/data:Code='changeWithPreEffect') * 2) + (number(data:Lawstatus/data:Code='changeWithoutPreEffect') * 3)"/>
+
+                        <fo:table-row line-height="6mm" border-bottom="0.4pt solid black" vertical-align="middle">
+                          <fo:table-cell>
+                            <fo:block>
+                              <fo:basic-link internal-destination="{generate-id(.)}">
+                                <fo:page-number-citation ref-id="{generate-id(.)}"/>
+                              </fo:basic-link>
+                            </fo:block>
+                          </fo:table-cell>
+                          <fo:table-cell>
+                            <fo:block>
+                              <fo:basic-link internal-destination="{generate-id(.)}">
+                                <xsl:value-of select="data:Theme/data:Text/data:LocalisedText[1]/data:Text"/>
+                                <xsl:if test="not(data:Lawstatus/data:Code = 'inForce')">
+                                  <xsl:text> (</xsl:text>
+                                  <xsl:value-of select="data:Lawstatus/data:Text/data:LocalisedText[1]/data:Text"></xsl:value-of>
+                                  <xsl:text>)</xsl:text>
+                                </xsl:if>
+                              </fo:basic-link>
+                            </fo:block>
+                          </fo:table-cell>
+                        </fo:table-row>
+
+                      </xsl:for-each-group>
+                    </xsl:if>
+
+                </xsl:for-each-group>
+
+              </fo:table-body>
+            </fo:table>
+          </xsl:when>
+          <xsl:otherwise>
+            <fo:block margin-top="1mm" margin-bottom="2.8mm" font-weight="400" font-size="6.5pt">–</fo:block>
+          </xsl:otherwise>
+        </xsl:choose>
+      </fo:block>
+    </fo:block-container>
   </xsl:template>
 
   <xsl:template name="handleRestrictionOnLandownership">
@@ -1172,6 +1277,7 @@
       </fo:block-container>
     </fo:static-content>
   </xsl:template>
+
   <xsl:template name="insertGlossary">
     <fo:page-sequence master-reference="mainPage" id="page-sequence-id">
       <xsl:call-template name="insertHeaderAndFooter"/>
